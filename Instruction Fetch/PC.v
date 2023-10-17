@@ -11,3 +11,6 @@ output reg [31:0] out;
   end
 
 endmodule
+
+// clk = 50MHZ
+// rst negative
