@@ -1,4 +1,4 @@
-module control_unit(op_code, mode, s_in, command, mem_r, mem_w, s, b, wb);
+module control_unit(op_code, mode, s_in, exe_cmd, mem_r_en, mem_w_en, s, b, wb_en);
 	input [3:0] op_code;
 	input [1:0] mode;
 	input s_in;
@@ -8,7 +8,7 @@ module control_unit(op_code, mode, s_in, command, mem_r, mem_w, s, b, wb);
 		case(mode)
 			2'b00:begin
 				case(op_code)	
-					4'b0000: begin exe_cmd = 4'0110; s = s_in; wb_en = 1'b1;  end
+					4'b0000: begin exe_cmd = 4'b0110; s = s_in; wb_en = 1'b1; end
           				4'b0001: begin exe_cmd = 4'b1000; s = s_in; wb_en = 1'b1; end
           				4'b0010: begin exe_cmd = 4'b0100; s = s_in; wb_en = 1'b1; end
           				4'b0100: begin exe_cmd = 4'b0010; s = s_in; wb_en = 1'b1; end
