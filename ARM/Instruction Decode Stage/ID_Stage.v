@@ -1,7 +1,8 @@
-module ID_Stage();
-
+module ID_Stage(clk, rst, StatusRegister_input, hazard, WB_WB_EN, WB_Dest, WB_Value, instruction, PC_in,
+		Val_Rm, Val_Rn, EXE_CMD, MEM_R_EN, MEM_W_EN, WB_EN, S, B, Two_src, mux_for_hazard,
+		Dest, Signed_imm_24, Shift_operand, imm, PC_out, StatusRegister_output);
     input clk, rst;
-    input StatusRegister_input;
+    input [3:0] StatusRegister_input;
     input hazard;
     input WB_WB_EN, WB_Dest, WB_Value;
     input [31:0] instruction;
@@ -21,6 +22,9 @@ module ID_Stage();
     wire [3:0] Rm, Rd, Rn, OP_Code, Cond;
     wire S_input, I, or_cond;
     wire [1:0] Mode;
+    wire [3:0] register_file_rd;
+    wire [31:0] registers [0:14];
+
     
     // rn = 19-16 src1
     assign Rm = instruction[3:0];
@@ -35,14 +39,15 @@ module ID_Stage();
     //MUX REGISTER FILE
     assign register_file_rd = MEM_W_EN ? Rd : Rm;
 
-    RegisterFile register_file(.clk(clk), .rst(rst), .WB_WB_EN(WB_WB_EN), .Rn(Rn), .Rd(register_file_rd), .WB_Dest(WB_Dest), .WB_Value(WB_Value), .Val_Rn(Val_Rn), .Val_Rm(Val_Rm));
+    RegisterFile register_file(.clk(clk), .rst(rst), .WB_WB_EN(WB_WB_EN), .Rn(Rn), .Rd(register_file_rd), .WB_Dest(WB_Dest), 
+				.WB_Value(WB_Value), .Val_Rn(Val_Rn), .Val_Rm(Val_Rm), .registers(registers));
     
     ConditionCheck condition_check(.Cond(Cond), .StatusRegister_output(StatusRegister_input), .out(condition_check_out));
     
     assign or_cond = ~condition_check_out | hazard;
 
-    ControlUnit control_unit(.mode(Mode), .op_code(OP_Code), .s_in(S_input), .exe_cmd(EXE_CMD), .mem_r_en(MEM_R_EN), .mem_w_en(MEM_W_EN), .wb_en(WB_EN), .s(S),
-                           .b(B));
+    ControlUnit control_unit(.mode(Mode), .op_code(OP_Code), .s_in(S_input), .exe_cmd(EXE_CMD), .mem_r_en(MEM_R_EN), .mem_w_en(MEM_W_EN), 
+				.wb_en(WB_EN), .s(S), .b(B));
 
 
     //MUX CONTROL UNIT
