@@ -1,8 +1,8 @@
 `include "IF_Stage.v"
-`include "adder.v"
-`include "Instruction_memory.v"
-`include "mux2to1.v"
-`include "PC.v"
+// `include "adder.v"
+// `include "Instruction_memory.v"
+// `include "mux2to1.v"
+// `include "PC.v"
 module IF_TB();
 	reg clk = 1'b0;
    	reg rst = 1'b0;
@@ -16,6 +16,8 @@ module IF_TB();
 
 	always #5 clk = ~clk; 
 	initial begin
+		$dumpfile("IF_TB.vcd");
+        $dumpvars(0, IF_stage);
 		rst = 1'b1;
 		#52 rst = 1'b0; 
 		#500 rst = 1'b1;

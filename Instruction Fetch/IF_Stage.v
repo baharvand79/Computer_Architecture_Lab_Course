@@ -1,3 +1,6 @@
+`include "adder.v"
+`include "Instruction_memory.v"
+`include "PC.v"
 module IF_Stage(clk, rst, freeze, Branch_Tacken, Branch_Address, Instruction, pc);
     input clk, rst, freeze, Branch_Tacken;
     input [31:0] Branch_Address;
@@ -6,9 +9,6 @@ module IF_Stage(clk, rst, freeze, Branch_Tacken, Branch_Address, Instruction, pc
     wire [31:0] pc_out, adder_o;
     reg [31:0] pc_in;
     wire [31:0] PC_in;
-    input [31:0] x0, x1;
-	input sel;
-	output [31:0] y;
 	
     always@(posedge clk)
 	    pc_in = Branch_Tacken ? adder_o : Branch_Address;
