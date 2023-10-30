@@ -1,9 +1,10 @@
-module control_unit(op_code, mode, s_in, exe_cmd, mem_r_en, mem_w_en, s, b, wb_en);
+module ControlUnit(op_code, mode, s_in, exe_cmd, mem_r_en, mem_w_en, s, b, wb_en);
 	input [3:0] op_code;
 	input [1:0] mode;
 	input s_in;
 	output reg [3:0] exe_cmd;
 	output reg mem_r_en, mem_w_en, s, b, wb_en;
+	
 	always @(op_code, mode, s_in) begin
 		case(mode)
 			2'b00:begin
