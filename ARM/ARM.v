@@ -1,5 +1,5 @@
-`include "IF_Stage.v"
-`include "IF_Stage_Reg.v"
+`include "Instruction Fetch\IF_Stage.v"
+`include "Instruction Fetch\IF_Stage_Reg.v"
 module ARM(clk, rst, freeze, flush, Branch_Tacken, Branch_Addres, PC, Instruction);
     input clk, rst, freeze, flush, Branch_Tacken;
     input [31:0] Branch_Addres;

@@ -1,6 +1,6 @@
-`include "adder.v"
-`include "Instruction_memory.v"
-`include "PC.v"
+`include "Instruction Fetch\adder.v"
+`include "Instruction Fetch\Instruction_memory.v"
+`include "Instruction Fetch\PC.v"
 module IF_Stage(clk, rst, freeze, Branch_Tacken, Branch_Address, Instruction, pc);
     input clk, rst, freeze, Branch_Tacken;
     input [31:0] Branch_Address;
