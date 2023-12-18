@@ -8,9 +8,21 @@
 `include "Data_Memory_Reg.v"
 `include "StatusRegister .v"
 `include "Hazard_Detection_Unit.v"
-module ARM(clk, rst);
+module ARM(clk, rst, pc_if_reg_arm, Instruction_if_reg_arm, EXE_CMD_ID_REG_arm, WB_EN_ID_REG_arm, MEM_R_EN_ID_REG_arm, MEM_W_EN_ID_REG_arm, B_ID_REG_arm, S_ID_REG_arm,
+			mem0, mem1, mem2, mem3);
 	input clk, rst;
-
+	output [31:0] pc_if_reg_arm;
+	output [31:0] Instruction_if_reg_arm;
+	output [3:0] EXE_CMD_ID_REG_arm;
+	output WB_EN_ID_REG_arm, MEM_R_EN_ID_REG_arm, MEM_W_EN_ID_REG_arm, B_ID_REG_arm, S_ID_REG_arm;
+	assign MEM_R_EN_ID_REG_arm = MEM_R_EN_ID_REG;
+	assign MEM_W_EN_ID_REG_arm = MEM_W_EN_ID_REG;
+	assign WB_EN_ID_REG_arm = WB_EN_ID_REG;
+	assign pc_if_reg_arm = pc;
+	assign Instruction_if_reg_arm = Instruction_reg;
+	assign EXE_CMD_ID_REG_arm = EXE_CMD_ID_REG;
+	assign B_ID_REG_arm = B_ID_REG;
+	assign S_ID_REG_arm = S_ID_REG;
 	wire  freeze, Branch_Tacken, flush, hazard;
 	//wire WB_WB_EN = 1'b0;
 	wire [31:0] Branch_Address, instruction_mem; 
@@ -28,7 +40,7 @@ module ARM(clk, rst);
     wire imm, imm_ID_reg, WB_EN_EXE, MEM_R_EN_EXE, MEM_W_EN_EXE, MEM_R_EN_MEM_REG;
 	wire WB_EN_ID_REG, MEM_W_EN_ID_REG, MEM_R_EN_ID_REG, B_ID_REG, S_ID_REG, WB_EN_EXE_REG, MEM_R_EN_EXE_REG, MEM_W_EN_EXE_REG, WB_EN_MEM_REG;
 	wire [3:0] EXE_CMD_ID_REG, StatusRegister_output, status_bits, Dest_EXE, Dest_Mem_Reg, src_1, src_2;
-
+	output [31:0] mem0, mem1, mem2, mem3;
 	assign Rn = Instruction_reg[19:16];
     assign freeze = hazard;
 	// assign freeze = 0;
@@ -75,7 +87,7 @@ module ARM(clk, rst);
 				     .dest_out(Dest_EXE_Reg), .val_rm_out(val_rm_out_EXE_Reg), .instruction_in(instruction_exe), .instruction_out(instruction_exe_reg));
 
 	Data_Memory data_mem(.clk(clk), .rst(rst), .mem_r_en(MEM_R_EN_EXE_REG), .mem_w_en(MEM_W_EN_EXE_REG), .val_rm(val_rm_out_EXE_Reg), 
-				.alu_res(ALU_Result_EXE_REG), .Data_Memory_Output(data_mem_out), .instruction_in(instruction_exe_reg), .instruction_out(instruction_mem));
+				.alu_res(ALU_Result_EXE_REG), .Data_Memory_Output(data_mem_out), .instruction_in(instruction_exe_reg), .instruction_out(instruction_mem), mem0, mem1, mem2, mem3);
 
 	Data_Memory_Reg data_memory_reg(.clk(clk), .rst(rst), .mem_r_en(MEM_R_EN_EXE_REG), .wb_en(WB_EN_EXE_REG), .alu_res(ALU_Result_EXE_REG), 
 					.data_mem_out(data_mem_out), .mem_r_en_out(MEM_R_EN_MEM_REG), .wb_en_out(WB_EN_MEM_REG), .dest_out(Dest_Mem_Reg), 
