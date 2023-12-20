@@ -1,5 +1,5 @@
 $date
-	Wed Dec 20 17:49:40 2023
+	Wed Dec 20 17:58:42 2023
 $end
 $version
 	Icarus Verilog
@@ -342,8 +342,9 @@ $var wire 1 # rst $end
 $var wire 32 0# writeData [31:0] $end
 $var wire 32 1# dataAdr [31:0] $end
 $var wire 32 2# adr [31:0] $end
-$var parameter 32 3# WordCount $end
-$var reg 32 4# readData [31:0] $end
+$var wire 32 3# Data_Memory_Output_tmp [31:0] $end
+$var parameter 32 4# WordCount $end
+$var reg 32 5# readData [31:0] $end
 $upscope $end
 $upscope $end
 $upscope $end
@@ -351,7 +352,7 @@ $upscope $end
 $enddefinitions $end
 $comment Show the parameter values. $end
 $dumpall
-b1000000 3#
+b1000000 4#
 b100000 %#
 b1001 \"
 b100 X"
@@ -363,12 +364,13 @@ b101 !
 $end
 #0
 $dumpvars
-bx 4#
+b0 5#
+b0 3#
 b111111111111111111111100000000 2#
 b11111111111111111111110000000000 1#
 b0 0#
 b0 /#
-bx .#
+b0 .#
 b0 -#
 b0 ,#
 b0 +#
@@ -522,7 +524,7 @@ b0 M
 0L
 0K
 0J
-bx I
+b0 I
 b0 H
 b0 G
 b0 F

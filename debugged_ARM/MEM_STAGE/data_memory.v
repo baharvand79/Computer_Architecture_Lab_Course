@@ -11,14 +11,19 @@ module DataMemory(
     wire [31:0] dataAdr, adr;
     assign dataAdr = memAdr - 32'd1024;
     assign adr = {2'b00, dataAdr[31:2]}; // Align address to the word boundary
-
-    always @(negedge clk) begin
-        if (memWrite)
+    wire [31:0] Data_Memory_Output_tmp;
+    assign Data_Memory_Output_tmp = (memRead) ? dataMem[adr] : readData;
+    always @(posedge clk, posedge rst) begin
+        readData = Data_Memory_Output_tmp;
+        if (rst) begin
+            readData = 32'b0;
+        end
+        if (memRead)
             dataMem[adr] <= writeData;
     end
 
-    always @(memRead or adr) begin
-        if (memRead)
-            readData = dataMem[adr];
-    end
+    // always @(memRead or adr) begin
+    //     if (memRead)
+    //         readData = dataMem[adr];
+    // end
 endmodule

@@ -178,4 +178,6 @@ module ARM(
     .val_rm(val_rm_ex_mem_out),
     .data_out(data_read_out)
     );
+
+    
 endmodule
