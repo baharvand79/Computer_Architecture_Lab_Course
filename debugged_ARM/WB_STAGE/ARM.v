@@ -1,21 +1,28 @@
-`include "stage_IF.v"
-`include "stage_IF_to_ID_register.v"
-`include "stage_ID.v"
-`include "mux_2to1.v"
-`include "stage_ID_to_EX_register.v"
-`include "stage_EXE.v"
-`include "stage_EXE_to_MEM.v"
-`include "stage_MEM.v"
-`include "stage_MEM_to_WB_register.v"
-`include "stage_WB.v"
+//`include "stage_IF.v"
+//`include "stage_IF_to_ID_register.v"
+//`include "stage_ID.v"
+//`include "mux_2to1.v"
+//`include "stage_ID_to_EX_register.v"
+//`include "stage_EXE.v"
+//`include "stage_EXE_to_MEM.v"
+//`include "stage_MEM.v"
+//`include "stage_MEM_to_WB_register.v"
+//`include "stage_WB.v"
 module ARM(
     input clk, rst
 );
+
+    // Hazard
+    wire hazard, hazardTwoSrc;
+    wire [3:0] status;
+    wire [3:0] hazardRn, hazardRdm;
+  
     // IF
-    wire hazard, Branch_taken;
-    assign hazard = 1'b0, Branch_taken = 1'b0;// BranchAddr_if_stage_in = 32'd0; //remove it later
+    wire Branch_taken;
+    //assign hazard = 1'b0, Branch_taken = 1'b0;// BranchAddr_if_stage_in = 32'd0; //remove it later
     wire [31:0] BranchAddr;
     wire [31:0] PC_if_stage_out, Instruction_if_stage_out;
+    //assign  Branch_taken =  BranchAddr;
     Stage_IF stage_if(
         .clk(clk),
         .rst(rst),
@@ -114,7 +121,7 @@ module ARM(
     .mem_read_out(mem_read_id_ex_reg_out),
     .mem_write_out(mem_write_id_ex_reg_out),
     .wb_en_out(wb_en_id_ex_reg_out),
-    .b_out(b_id_ex_reg_out),
+    .b_out(Branch_taken),
     .s_out(s_id_ex_reg_out),
     .imm_out(imm_id_ex_reg_out),
     .carry_out(carry_id_ex_reg_out),
@@ -125,7 +132,6 @@ module ARM(
     );
 
     // EXE Stage
-    wire [3:0] status;
     wire [31:0] alu_res;
     Stage_EXE stage_exe(
     .clk(clk),
@@ -184,7 +190,7 @@ module ARM(
 
     //MEM REG
     wire wb_en_mem_to_wb_reg_out, mem_read_en_mem_to_wb_reg_out;
-    wire [31:0] alu_res_mem_to_wb_reg_out, mem_data_out_mem_ro_wb_reg_out;
+    wire [31:0] alu_res_mem_to_wb_reg_out, mem_data_out_mem_ro_wb_reg_out,  instruction_mem_in, instruction_mem_out;
     wire [3:0] dest_mem_to_wb_reg_out;
     Stage_MEM_to_WB_Register stage_MEM_to_WB_register(
     .clk(clk), 
@@ -198,7 +204,9 @@ module ARM(
     .memREnOut(mem_read_en_mem_to_wb_reg_out),
     .aluResOut(alu_res_mem_to_wb_reg_out),
     .memDataOut(mem_data_out_mem_ro_wb_reg_out),
-    .destOut(dest_mem_to_wb_reg_out)
+    .destOut(dest_mem_to_wb_reg_out),
+    .instruction_in(instruction_mem_in),
+    .instruction_out(instruction_mem_out)
     );
 
     // WB STAGE
@@ -209,5 +217,20 @@ module ARM(
     .aluRes(alu_res_mem_to_wb_reg_out),
     .memData(mem_data_out_mem_ro_wb_reg_out),
     .wbValue(wbValue)
+    );
+
+    //Hazard
+//    hazard_unit hazard_unit(
+//        .rn(hazardRn), .rdm(hazardRdm),
+//        .twoSrc(hazardTwoSrc),
+//        .destEx(destOutEx), .destMem(destOutMem),
+//        .wbEnEx(wbEnOutEx), .wbEnMem(wbEnOutMem),
+//        .hazard(hazard)
+//    );
+
+    hazard_unit  hazard_unit(.exe_wb_en(destOutEx), .src_1(hazardRn), .src_2(hazardRdm), 
+	.exe_dest(destOutEx), .mem_dest(destOutMem), .instruction_exe(instruction_exe_mem_out), 
+	.instruction_mem(instruction_mem_out), .mem_wb_en(wbEnOutMem),
+	.two_src(hazardTwoSrc),  .hazard_detected(hazard)
     );
 endmodule
