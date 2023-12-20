@@ -66,6 +66,7 @@ module Stage_ID(
     assign op_code = instruction_in[24:21];
     wire [1:0] mode;
     assign mode = instruction_in[27:26];
+    
     Control_Unit control_unit(    
     .mode(mode),
     .op_code(op_code),

@@ -5,6 +5,7 @@
 `include "stage_ID_to_EX_register.v"
 `include "stage_EXE.v"
 `include "stage_EXE_to_MEM.v"
+`include "stage_MEM.v"
 module ARM(
     input clk, rst
 );
@@ -163,5 +164,18 @@ module ARM(
     .val_rm_out(val_rm_ex_mem_out),
     .instruction_out(instruction_exe_mem_out),
     .dest_out(dest_ex_mem_out)
-);
+    );
+
+    //MEM STAGE
+    wire [31:0] data_read_out;
+    Stage_MEM stage_mem(
+    .clk(clk), 
+    .rst(rst),
+    .wb_en(wb_en_ex_mem_reg_out),
+    .mem_read_en(mem_read_en_ex_mem_reg_out),
+    .mem_write_en(mem_write_en_ex_mem_out),
+    .alu_re_addr(alu_res_ex_mem_reg_out),
+    .val_rm(val_rm_ex_mem_out),
+    .data_out(data_read_out)
+    );
 endmodule
