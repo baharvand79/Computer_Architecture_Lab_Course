@@ -1,6 +1,6 @@
-`include "register_file.v"
-`include "control_unit.v"
-`include "condition_check.v"
+//`include "register_file.v"
+//`include "control_unit.v"
+//`include "condition_check.v"
 module Stage_ID(
     input clk, rst,
     //from if to id register
@@ -38,12 +38,7 @@ module Stage_ID(
     wire [3:0] src1;
     assign src1 = instruction_in[19:16]; //src1 = rn
     wire [3:0] src2;
-    MUX_2to1 #(4) mux_src2(
-        .x0(Rm),
-        .x1(R_destination),
-        .sel(mem_write),
-        .res(src2)
-    );
+    
     wire [31:0] regRn, regRm;
     Register_File register_file(
         .clk(clk),
@@ -76,6 +71,14 @@ module Stage_ID(
     .wb_en(wb_en),
     .b(b),
     .s_out(s)
+    );
+
+
+     MUX_2to1 #(4) mux_src2(
+        .x0(Rm),
+        .x1(R_destination),
+        .sel(mem_write),
+        .res(src2)
     );
 
     //condition check

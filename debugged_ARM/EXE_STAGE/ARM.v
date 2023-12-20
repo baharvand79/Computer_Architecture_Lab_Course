@@ -1,15 +1,16 @@
-`include "stage_IF.v"
-`include "stage_IF_to_ID_register.v"
-`include "stage_ID.v"
-`include "mux_2to1.v"
-`include "stage_ID_to_EX_register.v"
-`include "stage_EXE.v"
-`include "stage_EXE_to_MEM.v"
+//`include "stage_IF.v"
+//`include "stage_IF_to_ID_register.v"
+//`include "stage_ID.v"
+//`include "mux_2to1.v"
+//`include "stage_ID_to_EX_register.v"
+//`include "stage_EXE.v"
+//`include "stage_EXE_to_MEM.v"
 module ARM(
     input clk, rst
 );
     // IF
     wire hazard, Branch_taken;
+    wire [3:0] status;
     assign hazard = 1'b0, Branch_taken = 1'b0;// BranchAddr_if_stage_in = 32'd0; //remove it later
     wire [31:0] BranchAddr;
     wire [31:0] PC_if_stage_out, Instruction_if_stage_out;
@@ -121,7 +122,6 @@ module ARM(
     );
 
     // EXE Stage
-    wire [3:0] status;
     wire [31:0] alu_res;
     Stage_EXE stage_exe(
     .clk(clk),
