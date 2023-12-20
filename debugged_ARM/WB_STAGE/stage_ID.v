@@ -30,6 +30,7 @@ module Stage_ID(
     assign imm24 = instruction_in[23:0];
     wire [3:0] Rm;
     assign Rm = instruction_in[3:0];
+    assign hazardRdm = Rm;
     assign R_destination = instruction_in[15:12];
     assign imm = instruction_in[25];
     assign hazardRn = instruction_in[19:16];
