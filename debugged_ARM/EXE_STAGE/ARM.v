@@ -4,6 +4,7 @@
 `include "mux_2to1.v"
 `include "stage_ID_to_EX_register.v"
 `include "stage_EXE.v"
+`include "stage_EXE_to_MEM.v"
 module ARM(
     input clk, rst
 );
@@ -140,4 +141,27 @@ module ARM(
     .branch_addr(BranchAddr),
     .status(status)
     );
+
+    // EXE REG
+    wire wb_en_ex_mem_reg_out, mem_read_en_ex_mem_reg_out, mem_write_en_ex_mem_out;
+    wire [31:0] alu_res_ex_mem_reg_out, val_rm_ex_mem_out, instruction_exe_mem_out;
+    wire [3:0] dest_ex_mem_out;
+    Stage_EXE_to_MEM_Reg stage_exe_to_mem_reg(
+    .clk(clk),
+    .rst(rst),
+    .wb_en_in(wb_en_id_ex_reg_out), 
+    .mem_read_en_in(mem_read_id_ex_reg_out),
+    .mem_write_en_in(mem_write_id_ex_reg_out),
+    .alu_res_in(alu_res),
+    .val_rm_in(reg2_id_ex_reg_out),
+    .instruction_in(instruction_id_ex_reg_out),
+    .dest_in(dest_id_ex_reg_out),
+    .wb_en_out(wb_en_ex_mem_reg_out),
+    .mem_read_en_out(mem_read_en_ex_mem_reg_out),
+    .mem_write_en_out(mem_write_en_ex_mem_out),
+    .alu_res_out(alu_res_ex_mem_reg_out),
+    .val_rm_out(val_rm_ex_mem_out),
+    .instruction_out(instruction_exe_mem_out),
+    .dest_out(dest_ex_mem_out)
+);
 endmodule
