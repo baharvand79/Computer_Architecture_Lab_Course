@@ -6,6 +6,7 @@
 `include "stage_EXE.v"
 `include "stage_EXE_to_MEM.v"
 `include "stage_MEM.v"
+`include "stage_MEM_to_WB_register.v"
 module ARM(
     input clk, rst
 );
@@ -179,5 +180,23 @@ module ARM(
     .data_out(data_read_out)
     );
 
+    //MEM REG
+    wire wb_en_mem_to_wb_reg_out, mem_read_en_mem_to_wb_reg_out;
+    wire [31:0] alu_res_mem_to_wb_reg_out, mem_data_out_mem_ro_wb_reg_out;
+    wire [3:0] dest_mem_to_wb_reg_out;
+    Stage_MEM_to_WB_Register stage_MEM_to_WB_register(
+    .clk(clk), 
+    .rst(rst),
+    .wbEnIn(wb_en_ex_mem_reg_out),
+    .memREnIn(mem_read_en_ex_mem_reg_out),
+    .aluResIn(alu_res_ex_mem_reg_out),
+    .memDataIn(val_rm_ex_mem_out),
+    .destIn(dest_ex_mem_out),
+    .wbEnOut(wb_en_mem_to_wb_reg_out),
+    .memREnOut(mem_read_en_mem_to_wb_reg_out),
+    .aluResOut(alu_res_mem_to_wb_reg_out),
+    .memDataOut(mem_data_out_mem_ro_wb_reg_out),
+    .destOut(dest_mem_to_wb_reg_out)
+);
     
 endmodule
